@@ -1,5 +1,6 @@
 import os
 from abc import ABC, abstractmethod
+
 from master.models.exceptions import RepositoryNotInitialized
 
 

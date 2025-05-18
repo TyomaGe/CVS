@@ -1,10 +1,10 @@
 import os
 
 from master.cvs.commands import AbstractCommand
-from master.models.command import Add
-from master.cvs.service.PathMaker import PathMaker
-from master.cvs.service.IndexFileHandler import IndexFileHandler
 from master.cvs.service.CVSObjectsMaker import CVSObjectsMaker
+from master.cvs.service.IndexFileHandler import IndexFileHandler
+from master.cvs.service.PathMaker import PathMaker
+from master.models.command import Add
 from master.models.objects import Blob
 
 

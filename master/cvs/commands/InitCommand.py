@@ -1,10 +1,10 @@
 import ctypes
 import os
 
-from .AbstractCommand import AbstractCommand
 from master.models.command import Init
-from ..service import HeadFileHandler
 from master.models.exceptions import RepositoryAlreadyExist
+from .AbstractCommand import AbstractCommand
+from ..service import HeadFileHandler
 from ..service.PathMaker import PathMaker
 
 
