@@ -1,5 +1,6 @@
 import os
 from abc import ABC, abstractmethod
+from master.models.exceptions import RepositoryNotInitialized
 
 
 class AbstractCommand(ABC):
@@ -10,8 +11,9 @@ class AbstractCommand(ABC):
     @classmethod
     def _check_repository_initialized(cls):
         if not os.path.isdir(os.path.join(os.getcwd(), ".cvs")):
-            print("\033[91mError: CVS repository not initialized in this directory.\033[0m")
-            exit(1)
+            raise RepositoryNotInitialized(
+                "CVS repository is not initialized in this directory"
+            )
 
     @classmethod
     def _get_dirs_paths(cls):

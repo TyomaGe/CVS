@@ -4,6 +4,7 @@ import os
 from .AbstractCommand import AbstractCommand
 from master.models.command import Init
 from ..service import HeadFileHandler
+from master.models.exceptions import RepositoryAlreadyExist
 
 
 class InitCommand(AbstractCommand):
@@ -11,15 +12,19 @@ class InitCommand(AbstractCommand):
         self.name = Init.name
         self.description = Init.description
         self.__dir, self.__cvs_dir = self._get_dirs_paths()
+        self._check_repository_initialized()
 
     def run(self, args):
         self.__init_folder()
         self.__init_cvs_insides()
+        print(
+            f"\033[92mInitialized empty CVS repository in {self.__dir}\033[0m")
 
     def __init_folder(self):
         if os.path.exists(self.__cvs_dir):
-            print("\033[93mRepository is already initialized\033[0m")
-            exit(1)
+            raise RepositoryAlreadyExist(
+                "CVS repository is already exist"
+            )
         os.makedirs(self.__cvs_dir)
         if os.name == 'nt':
             attr_hidden = 0x02
@@ -27,8 +32,6 @@ class InitCommand(AbstractCommand):
                 self.__cvs_dir,
                 attr_hidden
             )
-        print(
-            f"\033[92mInitialized empty CVS repository in {self.__dir}\033[0m")
 
     def __init_cvs_insides(self):
         objects_dir = os.path.join(self.__cvs_dir, "objects")
