@@ -20,3 +20,6 @@ class AbstractCommand(ABC):
         current_dir = os.getcwd()
         cvs_dir = os.path.join(current_dir, ".cvs")
         return current_dir, cvs_dir
+
+    def get_args(self, parser):
+        pass
