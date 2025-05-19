@@ -28,8 +28,12 @@ class AddCommand(AbstractCommand):
             if path_handler.is_file(abs_path):
                 self.__add_file(file, abs_path, obj_maker, index_handler)
             else:
-                self.__add_directory(abs_path, obj_maker, index_handler,
-                                     path_handler)
+                self.__add_directory(
+                    abs_path,
+                    obj_maker,
+                    index_handler,
+                    path_handler
+                )
 
     @classmethod
     def __add_file(cls, relative_path, abs_path, obj_maker, index_handler):
@@ -40,10 +44,15 @@ class AddCommand(AbstractCommand):
         for root, _, files in path_handler.walk(abs_dir):
             for f in files:
                 abs_file_path = path_handler.make_path(root, f)
-                relative_file_path = path_handler.get_rel_path(abs_file_path,
-                                                               self.__dir)
-                self.__add_file(relative_file_path, abs_file_path, obj_maker,
-                                index_handler)
+                relative_file_path = (path_handler.get_rel_path
+                    (abs_file_path,self.__dir)
+                )
+                self.__add_file(
+                    relative_file_path,
+                    abs_file_path,
+                    obj_maker,
+                    index_handler
+                )
 
     @classmethod
     def get_args(cls, parser):

@@ -1,7 +1,6 @@
 from master.cvs.commands import AbstractCommand
 from master.cvs.service import Printer, Hashier
-from master.cvs.service.handlers import HeadFileHandler, PathHandler, \
-    IndexFileHandler
+from master.cvs.service.handlers import *
 from master.models.command import Status
 
 
