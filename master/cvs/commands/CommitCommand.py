@@ -1,5 +1,5 @@
 from master.cvs.commands import AbstractCommand
-from master.cvs.service.handlers import PathHandler
+from master.cvs.service.handlers import PathHandler, IndexFileHandler
 from master.cvs.service.objects import CVSObjectsMaker
 from master.models.command import Commit
 
@@ -14,6 +14,8 @@ class CommitCommand(AbstractCommand):
 
     def run(self, args):
         self._check_repository_initialized()
+        index_handler = IndexFileHandler(self.__cvs_dir)
+        index_handler.has_changes()
         self.__commit_msg = args.message
         objects_maker = CVSObjectsMaker(self.__cvs_dir)
         sha1 = objects_maker.make_object(

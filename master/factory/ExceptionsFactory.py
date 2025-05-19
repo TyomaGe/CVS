@@ -1,3 +1,5 @@
+from doctest import UnexpectedException
+
 from master.models.exceptions import *
 
 
@@ -6,5 +8,7 @@ class ExceptionsFactory:
     def get_exceptions(cls):
         return (
             RepositoryAlreadyExist,
-            RepositoryNotInitialized
+            RepositoryNotInitialized,
+            EmptyIndexException,
+            UnchangedIndexException
         )

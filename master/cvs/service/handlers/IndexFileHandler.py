@@ -1,11 +1,15 @@
+from master.cvs.service import Hashier
 from master.cvs.service.handlers.PathHandler import PathHandler
+from master.models.exceptions import EmptyIndexException, \
+    UnchangedIndexException
 
 
 class IndexFileHandler:
     def __init__(self, cvs_dir):
-        path_handler = PathHandler()
-        self.__index_path = path_handler.make_path(cvs_dir, "index")
-        if not path_handler.exists(self.__index_path):
+        self.__cvs_dir = cvs_dir
+        self.__path_handler = PathHandler()
+        self.__index_path = self.__path_handler.make_path(cvs_dir, "index")
+        if not self.__path_handler.exists(self.__index_path):
             open(self.__index_path, "w").close()
 
     def add(self, file_path, sha1):
@@ -14,9 +18,8 @@ class IndexFileHandler:
         self.__write_all(entries)
 
     def read(self):
-        path_handler = PathHandler()
         entries = {}
-        if path_handler.exists(self.__index_path):
+        if self.__path_handler.exists(self.__index_path):
             with open(self.__index_path, "r") as f:
                 for line in f:
                     line = line.strip()
@@ -39,3 +42,75 @@ class IndexFileHandler:
         if file_path in entries:
             del entries[file_path]
             self.__write_all(entries)
+
+    def __get_last_commit_sha1(self):
+        head_path = self.__path_handler.connect_path(
+            self.__cvs_dir,
+            "refs",
+            "heads",
+            "master"
+        )
+        if not self.__path_handler.exists(head_path):
+            return None
+        with open(head_path, "r") as f:
+            return f.read().strip()
+
+    def __get_files_from_commit(self, commit_sha1):
+        tree_sha1 = self.__get_tree_sha1_from_commit(commit_sha1)
+        if not tree_sha1:
+            return {}
+        files = {}
+        self.__walk_tree(tree_sha1, "", files)
+        return files
+
+    def __get_tree_sha1_from_commit(self, commit_sha1):
+        folder, filename = Hashier.get_hash_parts(commit_sha1)
+        commit_path = self.__path_handler.connect_path(
+            self.__cvs_dir,
+            "objects",
+            folder,
+            filename
+        )
+        if not self.__path_handler.exists(commit_path):
+            return None
+        with open(commit_path, "rb") as f:
+            content = f.read().decode("utf-8")
+        for line in content.splitlines():
+            if line.startswith("tree "):
+                return line.split()[1]
+        return None
+
+    def __walk_tree(self, tree_sha1, prefix, files_dict):
+        folder, filename = Hashier.get_hash_parts(tree_sha1)
+        tree_path = self.__path_handler.connect_path(
+            self.__cvs_dir,
+            "objects",
+            folder,
+            filename
+        )
+        if not self.__path_handler.exists(tree_path):
+            return
+        with open(tree_path, "rb") as f:
+            content = f.read().decode("utf-8")
+        for line in content.splitlines():
+            mode, sha, name = line.split(maxsplit=2)
+            path = (self.__path_handler
+                    .make_path(prefix, name)) if prefix else name
+            if mode == "040000":
+                self.__walk_tree(sha, path, files_dict)
+            else:
+                files_dict[path] = sha
+
+    def has_changes(self):
+        current_entries = self.read()
+        last_commit_sha1 = self.__get_last_commit_sha1()
+        if last_commit_sha1:
+            last_commit_files = self.__get_files_from_commit(last_commit_sha1)
+        else:
+            last_commit_files = {}
+        if not last_commit_sha1 and not current_entries:
+            raise EmptyIndexException("Nothing to commit:"
+                                      " index is empty and no previous commits")
+        if last_commit_sha1 and current_entries == last_commit_files:
+            raise UnchangedIndexException("Nothing to commit:"
+                                          " index matches the last commit")
