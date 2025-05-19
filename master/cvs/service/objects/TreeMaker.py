@@ -24,18 +24,15 @@ class TreeMaker:
             else:
                 dir_path = parts[0]
                 tree_structure[dir_path].append((os.sep.join(parts[1:]), sha1))
-
         tree_entries = []
         for path, sha1 in tree_structure["."]:
             tree_entries.append(f"100644 {sha1} {path}")
-
         for dir_name, children in tree_structure.items():
             if dir_name == ".":
                 continue
             sub_index = {path: sha1 for path, sha1 in children}
             sub_tree_sha1 = self.__build_tree(sub_index)
             tree_entries.append(f"040000 {sub_tree_sha1} {dir_name}")
-
         tree_content = "\n".join(tree_entries).encode("utf-8")
         sha1 = Hashier.hash(tree_content, Tree.value)
         self.__writer.write_object(sha1, tree_content)

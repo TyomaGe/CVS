@@ -3,6 +3,7 @@ from master.cvs.service.objects import TreeMaker
 from master.cvs.service.Hashier import Hashier
 from master.cvs.service.ObjectWriter import ObjectWriter
 from master.models.objects import Commit
+from master.utilities import Time
 
 
 class CommitMaker:
@@ -28,7 +29,7 @@ class CommitMaker:
         lines = [f"tree {tree_sha1}"]
         if parent_sha1:
             lines.append(f"parent {parent_sha1}")
-        lines.append(f"author {author}")
+        lines.append(f"author {author} {Time.get_date()}")
         lines.append(f"\n{message}")
         content = "\n".join(lines).encode("utf-8")
         sha1 = Hashier.hash(content, Commit.value)

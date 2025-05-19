@@ -1,5 +1,3 @@
-from doctest import UnexpectedException
-
 from master.models.exceptions import *
 
 
