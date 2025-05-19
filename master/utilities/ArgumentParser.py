@@ -20,6 +20,7 @@ class ArgumentParser:
             command_instance.name,
             help=command_instance.description
         )
+        command_instance.get_args(command_parser)
         command_parser.set_defaults(command_instance=command_instance)
         self.__command_classes.append(command_instance)
 

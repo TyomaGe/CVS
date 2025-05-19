@@ -1,4 +1,5 @@
 from master.cvs.commands import *
+from master.cvs.commands.AddCommand import AddCommand
 
 
 class CommandsFactory:
@@ -6,4 +7,5 @@ class CommandsFactory:
     def get_commands(cls):
         return (
             InitCommand,
+            AddCommand,
         )
