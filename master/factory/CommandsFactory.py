@@ -7,5 +7,6 @@ class CommandsFactory:
         return (
             InitCommand,
             AddCommand,
-            CommitCommand
+            CommitCommand,
+            StatusCommand
         )

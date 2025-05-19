@@ -17,3 +17,9 @@ class Add:
 class Commit:
     name = "commit"
     description = ""
+
+
+@dataclass(frozen=True)
+class Status:
+    name = "status"
+    description = ""

@@ -1,5 +1,7 @@
 import hashlib
 
+from master.models.objects import Blob
+
 
 class Hashier:
     @classmethod
@@ -12,3 +14,9 @@ class Hashier:
     @classmethod
     def get_hash_parts(cls, sha1):
         return sha1[:2], sha1[2:]
+
+    @classmethod
+    def hash_file(cls, file_path):
+        with open(file_path, 'rb') as f:
+            data = f.read()
+        return cls.hash(data, Blob.value)
