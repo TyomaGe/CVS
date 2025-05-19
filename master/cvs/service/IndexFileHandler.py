@@ -21,7 +21,7 @@ class IndexFileHandler:
                 for line in f:
                     line = line.strip()
                     if line:
-                        path, sha1 = line.split(" ", 1)
+                        path, sha1 = line.rsplit(" ", 1)
                         entries[path] = sha1
         return entries
 
