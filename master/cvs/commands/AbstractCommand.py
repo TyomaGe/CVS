@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from master.cvs.service.PathHandler import PathHandler
+from master.cvs.service.handlers import PathHandler
 from master.models.exceptions import RepositoryNotInitialized
 
 

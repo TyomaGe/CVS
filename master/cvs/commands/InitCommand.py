@@ -1,8 +1,8 @@
 from master.models.command import Init
 from master.models.exceptions import RepositoryAlreadyExist
 from .AbstractCommand import AbstractCommand
-from ..service import HeadFileHandler
-from ..service.PathHandler import PathHandler
+from ..service.handlers import HeadFileHandler
+from master.cvs.service.handlers import PathHandler
 
 
 class InitCommand(AbstractCommand):

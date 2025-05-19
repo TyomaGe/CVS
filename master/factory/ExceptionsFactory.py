@@ -6,5 +6,7 @@ class ExceptionsFactory:
     def get_exceptions(cls):
         return (
             RepositoryAlreadyExist,
-            RepositoryNotInitialized
+            RepositoryNotInitialized,
+            EmptyIndexException,
+            UnchangedIndexException
         )

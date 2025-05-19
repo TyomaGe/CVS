@@ -12,4 +12,4 @@ def main():
         args = parser.get_arguments()
         args.command_instance.run(args)
     except exceptions as e:
-        print(f"\033[93m{e}\033[0m")
+        print(f"\033[91m{e}\033[0m")
