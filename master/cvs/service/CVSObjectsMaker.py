@@ -1,8 +1,6 @@
-import os
-
 from master.cvs.service.ByteReader import ByteReader
 from master.cvs.service.Hashier import Hashier
-from master.cvs.service.PathMaker import PathMaker
+from master.cvs.service.PathHandler import PathHandler
 from master.models.objects import Blob
 
 
@@ -20,17 +18,13 @@ class CVSObjectsMaker:
     def __make_blob_file(self, file_path):
         data = ByteReader.get_bytes(file_path)
         sha1 = Hashier.hash(data, self.__obj_type)
-        path_maker = PathMaker()
+        path_handler = PathHandler()
         folder = sha1[:2]
         filename = sha1[2:]
-        object_dir = path_maker.connect_path(
-            self.__cvs_dir,
-            "objects",
-            folder
-        )
-        object_path = path_maker.make_path(object_dir, filename)
-        os.makedirs(object_dir, exist_ok=True)
-        if not os.path.exists(object_path):
+        obj_dir = path_handler.connect_path(self.__cvs_dir, "objects", folder)
+        object_path = path_handler.make_path(obj_dir, filename)
+        path_handler.make_dirs(obj_dir, exist_ok=True)
+        if not path_handler.exists(object_path):
             with open(object_path, "wb") as f:
                 f.write(data)
         return sha1

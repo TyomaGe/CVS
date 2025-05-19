@@ -1,12 +1,11 @@
-import os
-
-from master.cvs.service.PathMaker import PathMaker
+from master.cvs.service.PathHandler import PathHandler
 
 
 class IndexFileHandler:
     def __init__(self, cvs_dir):
-        self.__index_path = PathMaker().make_path(cvs_dir, "index")
-        if not os.path.exists(self.__index_path):
+        path_handler = PathHandler()
+        self.__index_path = path_handler.make_path(cvs_dir, "index")
+        if not path_handler.exists(self.__index_path):
             open(self.__index_path, "w").close()
 
     def add(self, file_path, sha1):
@@ -15,8 +14,9 @@ class IndexFileHandler:
         self.__write_all(entries)
 
     def read(self):
+        path_handler = PathHandler()
         entries = {}
-        if os.path.exists(self.__index_path):
+        if path_handler.exists(self.__index_path):
             with open(self.__index_path, "r") as f:
                 for line in f:
                     line = line.strip()
