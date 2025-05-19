@@ -43,7 +43,7 @@ class IndexFileHandler:
             del entries[file_path]
             self.__write_all(entries)
 
-    def __get_last_commit_sha1(self):
+    def get_last_commit_sha1(self):
         head_path = self.__path_handler.connect_path(
             self.__cvs_dir,
             "refs",
@@ -55,15 +55,15 @@ class IndexFileHandler:
         with open(head_path, "r") as f:
             return f.read().strip()
 
-    def __get_files_from_commit(self, commit_sha1):
-        tree_sha1 = self.__get_tree_sha1_from_commit(commit_sha1)
+    def get_files_from_commit(self, commit_sha1):
+        tree_sha1 = self.get_tree_sha1_from_commit(commit_sha1)
         if not tree_sha1:
             return {}
         files = {}
         self.__walk_tree(tree_sha1, "", files)
         return files
 
-    def __get_tree_sha1_from_commit(self, commit_sha1):
+    def get_tree_sha1_from_commit(self, commit_sha1):
         folder, filename = Hashier.get_hash_parts(commit_sha1)
         commit_path = self.__path_handler.connect_path(
             self.__cvs_dir,
@@ -103,9 +103,9 @@ class IndexFileHandler:
 
     def has_changes(self):
         current_entries = self.read()
-        last_commit_sha1 = self.__get_last_commit_sha1()
+        last_commit_sha1 = self.get_last_commit_sha1()
         if last_commit_sha1:
-            last_commit_files = self.__get_files_from_commit(last_commit_sha1)
+            last_commit_files = self.get_files_from_commit(last_commit_sha1)
         else:
             last_commit_files = {}
         if not last_commit_sha1 and not current_entries:
