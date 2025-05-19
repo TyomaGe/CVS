@@ -8,5 +8,6 @@ class ExceptionsFactory:
             RepositoryAlreadyExist,
             RepositoryNotInitialized,
             EmptyIndexException,
-            UnchangedIndexException
+            UnchangedIndexException,
+            BranchHasNoCommits
         )

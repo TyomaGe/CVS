@@ -23,3 +23,9 @@ class Commit:
 class Status:
     name = "status"
     description = ""
+
+
+@dataclass(frozen=True)
+class Log:
+    name = "log"
+    description = ""

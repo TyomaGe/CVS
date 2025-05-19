@@ -8,5 +8,6 @@ class CommandsFactory:
             InitCommand,
             AddCommand,
             CommitCommand,
-            StatusCommand
+            StatusCommand,
+            LogCommand
         )
