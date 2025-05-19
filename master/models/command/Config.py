@@ -11,3 +11,9 @@ class Init:
 class Add:
     name = "add"
     description = ""
+
+
+@dataclass(frozen=True)
+class Commit:
+    name = "commit"
+    description = ""

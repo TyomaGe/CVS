@@ -12,6 +12,10 @@ class PathHandler:
         return os.path.join(*parts)
 
     @classmethod
+    def get_dirname(cls, path):
+        return os.path.dirname(path)
+
+    @classmethod
     def getcwd(cls):
         return os.getcwd()
 

@@ -1,4 +1,4 @@
-from master.cvs.service.PathHandler import PathHandler
+from master.cvs.service.handlers.PathHandler import PathHandler
 
 
 class IndexFileHandler:

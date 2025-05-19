@@ -1,7 +1,7 @@
 from master.cvs.commands import AbstractCommand
-from master.cvs.service.CVSObjectsMaker import CVSObjectsMaker
-from master.cvs.service.IndexFileHandler import IndexFileHandler
-from master.cvs.service.PathHandler import PathHandler
+from master.cvs.service.objects import CVSObjectsMaker
+from master.cvs.service.handlers import IndexFileHandler
+from master.cvs.service.handlers import PathHandler
 from master.models.command import Add
 from master.models.objects import Blob
 
@@ -18,7 +18,7 @@ class AddCommand(AbstractCommand):
         self.__files = args.files
         path_handler = PathHandler()
         index_handler = IndexFileHandler(self.__cvs_dir)
-        obj_maker = CVSObjectsMaker(Blob.value, self.__cvs_dir)
+        obj_maker = CVSObjectsMaker(self.__cvs_dir)
 
         for file in self.__files:
             abs_path = path_handler.make_path(self.__dir, file)
@@ -33,7 +33,7 @@ class AddCommand(AbstractCommand):
 
     @classmethod
     def __add_file(cls, relative_path, abs_path, obj_maker, index_handler):
-        sha1 = obj_maker.make_object(abs_path)
+        sha1 = obj_maker.make_object(abs_path, Blob.value)
         index_handler.add(relative_path, sha1)
 
     def __add_directory(self, abs_dir, obj_maker, index_handler, path_handler):
