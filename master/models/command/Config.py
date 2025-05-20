@@ -29,3 +29,15 @@ class Status:
 class Log:
     name = "log"
     description = ""
+
+
+@dataclass(frozen=True)
+class Reset:
+    name = "reset"
+    description = ""
+
+
+@dataclass(frozen=True)
+class Rm:
+    name = "rm"
+    description = ""

@@ -1,4 +1,5 @@
 from master.cvs.commands import *
+from master.cvs.commands.RmCommand import RmCommand
 
 
 class CommandsFactory:
@@ -9,5 +10,7 @@ class CommandsFactory:
             AddCommand,
             CommitCommand,
             StatusCommand,
-            LogCommand
+            LogCommand,
+            ResetCommand,
+            RmCommand
         )

@@ -52,3 +52,8 @@ class PathHandler:
         if cls.is_windows():
             attr_hidden = 0x02
             ctypes.windll.kernel32.SetFileAttributesW(path, attr_hidden)
+
+    @classmethod
+    def remove_file(cls, path):
+        if cls.exists(path) and cls.is_file(path):
+            os.remove(path)

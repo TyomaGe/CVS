@@ -7,6 +7,8 @@ class Printer:
                 print(f"\033[32m\tmodified:   {file}\033[0m")
             for file in staged_changes.get("new file", []):
                 print(f"\033[32m\tnew file:   {file}\033[0m")
+            for file in staged_changes.get("deleted", []):
+                print(f"\033[32m\tdeleted:    {file}\033[0m")
             print()
 
     @classmethod
@@ -15,6 +17,8 @@ class Printer:
             print("Changes not staged for commit:")
             for file in unstaged_changes.get("modified", []):
                 print(f"\033[31m\tmodified:   {file}\033[0m")
+            for file in unstaged_changes.get("deleted", []):
+                print(f"\033[31m\tdeleted:    {file}\033[0m")
             print()
 
     def print_status(self, branch, staged_changes, unstaged_changes):
