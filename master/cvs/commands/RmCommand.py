@@ -1,7 +1,8 @@
+import os
+
 from master.cvs.commands import AbstractCommand
 from master.cvs.service.handlers import IndexFileHandler, PathHandler
 from master.models.command import Rm
-from master.models.exceptions import HashException
 
 
 class RmCommand(AbstractCommand):
@@ -13,19 +14,65 @@ class RmCommand(AbstractCommand):
 
     def get_args(self, parser):
         parser.add_argument(
-            "file_path",
-            type=str,
+            "paths",
+            nargs="+",
         )
 
     def run(self, args):
         self._check_repository_initialized()
         index_handler = IndexFileHandler(self.__cvs_dir)
-        file_path = args.file_path
-        if not index_handler.contains(file_path):
-            raise HashException(f"File '{file_path}' is not in the index")
-        abs_path = self.__path_handler.make_path(self.__dir, file_path)
-        self.__path_handler.remove_file(abs_path)
-        index_handler.remove(file_path)
-        print(
-            f"\033[93mFile '{file_path}' removed"
-            f" from index and directory\033[0m")
+        tracked_files = index_handler.get_index_paths()
+        for relative_path in args.paths:
+            abs_path = self.__path_handler.make_path(self.__dir, relative_path)
+            if self.__path_handler.exists(abs_path):
+                if self.__path_handler.is_dir(abs_path):
+                    for root, _, files in self.__path_handler.walk(abs_path):
+                        for f in files:
+                            full_path = self.__path_handler.make_path(root, f)
+                            rel_path = self.__path_handler.get_rel_path(
+                                full_path,
+                                self.__dir
+                            )
+                            self.__remove_if_tracked(
+                                index_handler,
+                                rel_path,
+                                full_path
+                            )
+                    self.__path_handler.remove_empty_dirs_up(
+                        abs_path,
+                        self.__dir
+                    )
+                else:
+                    self.__remove_if_tracked(
+                        index_handler,
+                        relative_path,
+                        abs_path
+                    )
+                    self.__path_handler.remove_empty_dirs_up(
+                        self.__path_handler.get_dirname(abs_path),
+                        self.__dir
+                    )
+            else:
+                matched = False
+                for tracked_path in tracked_files:
+                    if (tracked_path == relative_path or
+                            tracked_path.startswith(relative_path + os.sep)):
+                        matched = True
+                        self.__remove_if_tracked(
+                            index_handler,
+                            tracked_path,
+                            None
+                        )
+                if not matched:
+                    print(f"\033[91m'{relative_path}' is not tracked\033[0m")
+
+    def __remove_if_tracked(self, index_handler, rel_path, abs_path):
+        if index_handler.contains(rel_path):
+            if abs_path and self.__path_handler.exists(abs_path):
+                self.__path_handler.remove_file(abs_path)
+            index_handler.remove(rel_path)
+            print(
+                f"\033[93mRemoved '{rel_path}' "
+                f"from index and directory\033[0m")
+        else:
+            print(f"\033[91m'{rel_path}' is not tracked\033[0m")
