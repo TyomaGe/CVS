@@ -4,8 +4,15 @@ import argparse
 class ArgumentParser:
     def __init__(self):
         self.__parser = argparse.ArgumentParser(
-            description="",
-            epilog="",
+            description="CVS - a simple version control system\n"
+                        "Use this tool to manage your project files"
+                        " with commands like init, add, commit,"
+                        " status, log, reset, and rm",
+            epilog="Examples:\n"
+                   "init\n"
+                   "add file.txt\n"
+                   "commit -m \"Commit message\"\n"
+                   "status",
             formatter_class=argparse.RawDescriptionHelpFormatter
         )
         self.__subparsers = self.__parser.add_subparsers(
