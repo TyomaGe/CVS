@@ -52,3 +52,18 @@ class PathHandler:
         if cls.is_windows():
             attr_hidden = 0x02
             ctypes.windll.kernel32.SetFileAttributesW(path, attr_hidden)
+
+    @classmethod
+    def remove_file(cls, path):
+        if cls.exists(path) and cls.is_file(path):
+            os.remove(path)
+
+    @classmethod
+    def remove_empty_dirs_up(cls, start_path, stop_path):
+        current = start_path
+        while cls.get_dirname(current) != cls.get_dirname(stop_path):
+            try:
+                os.rmdir(current)
+            except OSError:
+                break
+            current = cls.get_dirname(current)

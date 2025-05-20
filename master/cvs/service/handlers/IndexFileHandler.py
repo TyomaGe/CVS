@@ -1,7 +1,7 @@
 from master.cvs.service import Hashier
 from master.cvs.service.handlers.PathHandler import PathHandler
 from master.models.exceptions import EmptyIndexException, \
-    UnchangedIndexException
+    UnchangedIndexException, HashException
 
 
 class IndexFileHandler:
@@ -15,7 +15,7 @@ class IndexFileHandler:
     def add(self, file_path, sha1):
         entries = self.read()
         entries[file_path] = sha1
-        self.__write_all(entries)
+        self.write_all(entries)
 
     def read(self):
         entries = {}
@@ -28,7 +28,7 @@ class IndexFileHandler:
                         entries[path] = sha1
         return entries
 
-    def __write_all(self, entries):
+    def write_all(self, entries):
         with open(self.__index_path, "w") as f:
             for path, sha1 in entries.items():
                 f.write(f"{path} {sha1}\n")
@@ -41,7 +41,7 @@ class IndexFileHandler:
         entries = self.read()
         if file_path in entries:
             del entries[file_path]
-            self.__write_all(entries)
+            self.write_all(entries)
 
     def get_last_commit_sha1(self):
         head_path = self.__path_handler.connect_path(
@@ -114,3 +114,68 @@ class IndexFileHandler:
         if last_commit_sha1 and current_entries == last_commit_files:
             raise UnchangedIndexException("Nothing to commit:"
                                           " index matches the last commit")
+
+    def find_full_commit_sha1(self, short_sha):
+        visited = set()
+        if len(short_sha) < 7:
+            raise HashException("Hash length must be minimum 7 digits")
+        current_sha = self.get_last_commit_sha1()
+        while current_sha and current_sha not in visited:
+            visited.add(current_sha)
+            if current_sha.startswith(short_sha):
+                return current_sha
+            parent_sha = self.__get_parent_commit(current_sha)
+            current_sha = parent_sha
+        return None
+
+    def __get_parent_commit(self, commit_sha1):
+        folder, filename = Hashier.get_hash_parts(commit_sha1)
+        commit_path = self.__path_handler.connect_path(
+            self.__cvs_dir,
+            "objects",
+            folder,
+            filename
+        )
+        if not self.__path_handler.exists(commit_path):
+            return None
+        with open(commit_path, "rb") as f:
+            content = f.read().decode("utf-8")
+        for line in content.splitlines():
+            if line.startswith("parent "):
+                return line.split()[1]
+        return None
+
+    def restore_files_to_directory(self, files_dict, root_dir):
+        current_index = self.read()
+        for rel_path in current_index:
+            abs_path = self.__path_handler.connect_path(root_dir, rel_path)
+            if self.__path_handler.exists(abs_path):
+                self.__path_handler.remove_file(abs_path)
+        for rel_path, sha1 in files_dict.items():
+            folder, filename = Hashier.get_hash_parts(sha1)
+            object_path = self.__path_handler.connect_path(
+                self.__cvs_dir, "objects", folder, filename
+            )
+            if not self.__path_handler.exists(object_path):
+                continue
+            with open(object_path, "rb") as f:
+                content = f.read()
+            target_path = self.__path_handler.connect_path(root_dir, rel_path)
+            target_dir = self.__path_handler.get_dirname(target_path)
+            if not self.__path_handler.exists(target_dir):
+                self.__path_handler.make_dirs(target_dir, exist_ok=True)
+            with open(target_path, "wb") as out_file:
+                out_file.write(content)
+
+    def update_head(self, commit_sha1, branch_name="master"):
+        ref_path = self.__path_handler.connect_path(
+            self.__cvs_dir,
+            "refs",
+            "heads",
+            branch_name
+        )
+        with open(ref_path, "w") as f:
+            f.write(commit_sha1 + "\n")
+
+    def get_index_paths(self):
+        return list(self.read().keys())

@@ -32,19 +32,25 @@ class StatusCommand(AbstractCommand):
         last_commit_files = index_handler.get_files_from_commit(
             last_commit_sha)
         current_index = index_handler.read()
-        changes = {"modified": [], "new file": []}
+        changes = {"modified": [], "new file": [], "deleted": []}
         for file, index_sha in current_index.items():
             if file not in last_commit_files:
                 changes["new file"].append(file)
             elif last_commit_files[file] != index_sha:
                 changes["modified"].append(file)
+        for file in last_commit_files:
+            if file not in current_index:
+                changes["deleted"].append(file)
         return {k: v for k, v in changes.items() if v}
 
     def __get_unstaged_changes(self, index_handler):
         index_entries = index_handler.read()
-        changes = {"modified": []}
+        changes = {"modified": [], "deleted": []}
         for file, index_sha in index_entries.items():
             file_path = self.__path_handler.make_path(self.__dir, file)
+            if not self.__path_handler.exists(file_path):
+                changes["deleted"].append(file)
+                continue
             if self.__path_handler.is_file(file_path):
                 current_sha = Hashier.hash_file(file_path)
                 if current_sha != index_sha:

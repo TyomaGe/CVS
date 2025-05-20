@@ -9,5 +9,6 @@ class ExceptionsFactory:
             RepositoryNotInitialized,
             EmptyIndexException,
             UnchangedIndexException,
-            BranchHasNoCommits
+            BranchHasNoCommits,
+            HashException
         )
