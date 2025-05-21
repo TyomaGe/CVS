@@ -3,13 +3,13 @@ from master.models.exceptions import BranchHasNoCommits
 
 
 class HeadFileHandler:
-    def __init__(self, path):
-        self.__path = path
+    def __init__(self, cvs_dir):
+        self.__cvs_dir = cvs_dir
         self.__path_handler = PathHandler()
-        self.__head_path = self.__path_handler.connect_path(path, "HEAD")
+        self.__head_path = self.__path_handler.connect_path(cvs_dir, "HEAD")
 
     def change_branch(self, branch):
-        with open(self.__path, "w") as head_file:
+        with open(self.__cvs_dir, "w") as head_file:
             head_file.write(f"refs/heads/{branch}\n")
 
     def get_current_branch(self):
