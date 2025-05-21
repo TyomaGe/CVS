@@ -9,8 +9,6 @@ class IndexFileHandler:
         self.__cvs_dir = cvs_dir
         self.__path_handler = PathHandler()
         self.__index_path = self.__path_handler.make_path(cvs_dir, "index")
-        if not self.__path_handler.exists(self.__index_path):
-            open(self.__index_path, "w").close()
 
     def add(self, file_path, sha1):
         entries = self.read()
@@ -144,28 +142,6 @@ class IndexFileHandler:
             if line.startswith("parent "):
                 return line.split()[1]
         return None
-
-    def restore_files_to_directory(self, files_dict, root_dir):
-        current_index = self.read()
-        for rel_path in current_index:
-            abs_path = self.__path_handler.connect_path(root_dir, rel_path)
-            if self.__path_handler.exists(abs_path):
-                self.__path_handler.remove_file(abs_path)
-        for rel_path, sha1 in files_dict.items():
-            folder, filename = Hashier.get_hash_parts(sha1)
-            object_path = self.__path_handler.connect_path(
-                self.__cvs_dir, "objects", folder, filename
-            )
-            if not self.__path_handler.exists(object_path):
-                continue
-            with open(object_path, "rb") as f:
-                content = f.read()
-            target_path = self.__path_handler.connect_path(root_dir, rel_path)
-            target_dir = self.__path_handler.get_dirname(target_path)
-            if not self.__path_handler.exists(target_dir):
-                self.__path_handler.make_dirs(target_dir, exist_ok=True)
-            with open(target_path, "wb") as out_file:
-                out_file.write(content)
 
     def update_head(self, commit_sha1, branch_name="master"):
         ref_path = self.__path_handler.connect_path(

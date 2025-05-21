@@ -28,6 +28,6 @@ class HeadFileHandler:
             with open(branch_path, "r") as f:
                 return f.read().strip()
         except FileNotFoundError as e:
-            raise BranchHasNoCommits("There`s no commits yet in branch '{}'"
-                .format(branch_ref[len("refs/heads/"):])
+            raise BranchHasNoCommits(f"There`s no commits yet in branch"
+                                     f" '{branch_ref[len("refs/heads/"):]}'"
             ) from e
