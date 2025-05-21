@@ -1,5 +1,4 @@
 from master.cvs.commands import AbstractCommand
-from master.cvs.service import Printer
 from master.cvs.service.handlers import *
 from master.models.command import Checkout
 from master.models.exceptions import CurrentBranchException
@@ -11,11 +10,9 @@ class CheckoutCommand(AbstractCommand):
         self.description = Checkout.description
         self.__dir, self.__cvs_dir = self._get_dirs_paths()
         self.__index_handler = IndexFileHandler(self.__cvs_dir)
-        self.__path_handler = PathHandler()
         self.__file_handler = FileHandler(self.__dir, self.__cvs_dir)
         self.__head_handler = HeadFileHandler(self.__cvs_dir)
         self.__branch_handler = BranchHandler(self.__dir, self.__cvs_dir)
-        self.__printer = Printer()
 
     def get_args(self, parser):
         parser.add_argument(

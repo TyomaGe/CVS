@@ -1,8 +1,7 @@
 from master.cvs.service import Hashier
 from master.cvs.service.handlers import HeadFileHandler
 from master.cvs.service.handlers.PathHandler import PathHandler
-from master.models.exceptions import EmptyIndexException, \
-    UnchangedIndexException, HashException
+from master.models.exceptions import *
 
 
 class IndexFileHandler:

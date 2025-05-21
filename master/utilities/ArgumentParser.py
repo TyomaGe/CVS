@@ -7,7 +7,7 @@ class ArgumentParser:
             description="CVS - a simple version control system\n"
                         "Use this tool to manage your project files"
                         " with commands like init, add, commit,"
-                        " status, log, reset, and rm",
+                        " status, log, reset, and etc",
             epilog="Examples:\n"
                    "init\n"
                    "add file.txt\n"

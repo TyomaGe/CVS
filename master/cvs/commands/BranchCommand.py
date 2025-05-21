@@ -1,5 +1,3 @@
-from select import select
-
 from master.cvs.commands import AbstractCommand
 from master.cvs.service import Printer
 from master.cvs.service.handlers import *

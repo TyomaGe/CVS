@@ -50,10 +50,10 @@ class Rm:
 @dataclass(frozen=True)
 class Branch:
     name = "branch"
-    description = ""
+    description = "Allows you to work with branches"
 
 
 @dataclass(frozen=True)
 class Checkout:
     name = "checkout"
-    description = ""
+    description = "Allows you to switch between branches"
