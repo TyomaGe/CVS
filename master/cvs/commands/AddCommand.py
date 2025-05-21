@@ -44,8 +44,11 @@ class AddCommand(AbstractCommand):
         for root, _, files in path_handler.walk(abs_dir):
             for f in files:
                 abs_file_path = path_handler.make_path(root, f)
-                relative_file_path = (path_handler.get_rel_path
-                    (abs_file_path,self.__dir)
+                relative_file_path = (
+                    path_handler.get_rel_path(
+                        abs_file_path,
+                        self.__dir
+                    )
                 )
                 self.__add_file(
                     relative_file_path,

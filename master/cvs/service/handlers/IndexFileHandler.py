@@ -110,7 +110,7 @@ class IndexFileHandler:
             last_commit_files = {}
         if not last_commit_sha1 and not current_entries:
             raise EmptyIndexException("Nothing to commit:"
-                                      " index is empty and no previous commits")
+                                    " index is empty and no previous commits")
         if last_commit_sha1 and current_entries == last_commit_files:
             raise UnchangedIndexException("Nothing to commit:"
                                           " index matches the last commit")
@@ -179,3 +179,12 @@ class IndexFileHandler:
 
     def get_index_paths(self):
         return list(self.read().keys())
+
+    def restore(self, file_paths):
+        entries = self.read()
+        for path in file_paths:
+            if path in entries:
+                del entries[path]
+                print(f"\033[93mRestored '{path}' "
+                      f"(removed from index only)\033[0m")
+        self.write_all(entries)
