@@ -45,3 +45,15 @@ class Rm:
     name = "rm"
     description = ("Remove files or directories from"
                    " the index and working directory")
+
+
+@dataclass(frozen=True)
+class Branch:
+    name = "branch"
+    description = "Allows you to work with branches"
+
+
+@dataclass(frozen=True)
+class Checkout:
+    name = "checkout"
+    description = "Allows you to switch between branches"

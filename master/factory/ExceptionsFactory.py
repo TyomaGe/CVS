@@ -10,5 +10,8 @@ class ExceptionsFactory:
             EmptyIndexException,
             UnchangedIndexException,
             BranchHasNoCommits,
-            HashException
+            HashException,
+            BranchNotExist,
+            CurrentBranchException,
+            MasterBranchException
         )

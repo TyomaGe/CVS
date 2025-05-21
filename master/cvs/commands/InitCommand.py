@@ -1,8 +1,8 @@
 from master.models.command import Init
 from master.models.exceptions import RepositoryAlreadyExist
 from .AbstractCommand import AbstractCommand
-from ..service.handlers import HeadFileHandler
 from master.cvs.service.handlers import PathHandler
+from ..service.handlers.BranchHandler import BranchHandler
 
 
 class InitCommand(AbstractCommand):
@@ -30,5 +30,5 @@ class InitCommand(AbstractCommand):
         refs_dir = path_handler.connect_path(self.__cvs_dir, "refs", "heads")
         path_handler.make_dirs(objects_dir)
         path_handler.make_dirs(refs_dir)
-        head_path = path_handler.make_path(self.__cvs_dir, "HEAD")
-        HeadFileHandler(head_path).change_branch("master")
+        branch_handler = BranchHandler(self.__dir, self.__cvs_dir)
+        branch_handler.change_branch("master")

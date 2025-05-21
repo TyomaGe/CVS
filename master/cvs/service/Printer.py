@@ -34,3 +34,11 @@ class Printer:
         print("Author: {}".format(commit_data['author']))
         print("Date:   {}\n".format(commit_data['date']))
         print("    {}\n".format(commit_data['message']))
+
+    @classmethod
+    def print_branch_list(cls, branches, cur_branch):
+        for branch in branches:
+            if branch == cur_branch:
+                print(f"\033[32m* {cur_branch}\033[0m")
+            else:
+                print(f"  {branch}")

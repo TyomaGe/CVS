@@ -6,3 +6,5 @@ from .StatusCommand import StatusCommand
 from .LogCommand import LogCommand
 from .ResetCommand import ResetCommand
 from .RmCommand import RmCommand
+from .BranchCommand import BranchCommand
+from .CheckoutCommand import CheckoutCommand
