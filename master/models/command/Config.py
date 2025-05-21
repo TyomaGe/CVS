@@ -51,3 +51,9 @@ class Rm:
 class Branch:
     name = "branch"
     description = ""
+
+
+@dataclass(frozen=True)
+class Checkout:
+    name = "checkout"
+    description = ""

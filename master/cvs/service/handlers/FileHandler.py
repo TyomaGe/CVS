@@ -17,6 +17,7 @@ class FileHandler:
             abs_path = self.__path_handler.connect_path(root_dir, rel_path)
             if self.__path_handler.exists(abs_path):
                 self.__path_handler.remove_file(abs_path)
+            self.__path_handler.remove_empty_dirs_recursive(root_dir)
         for rel_path, sha1 in files_dict.items():
             folder, filename = Hashier.get_hash_parts(sha1)
             object_path = self.__path_handler.connect_path(
@@ -76,8 +77,5 @@ class FileHandler:
             if abs_path and self.__path_handler.exists(abs_path):
                 self.__path_handler.remove_file(abs_path)
             index_handler.remove(rel_path)
-            print(
-                f"\033[93mRemoved '{rel_path}' "
-                f"from index and directory\033[0m")
         else:
             print(f"\033[91m'{rel_path}' is not tracked\033[0m")

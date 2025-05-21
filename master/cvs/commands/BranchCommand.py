@@ -1,3 +1,5 @@
+from select import select
+
 from master.cvs.commands import AbstractCommand
 from master.cvs.service import Printer
 from master.cvs.service.handlers import *
@@ -42,9 +44,7 @@ class BranchCommand(AbstractCommand):
             self.__print_branch_list()
 
     def __delete_branch(self, branch_name):
-        branch_list = self.__branch_handler.get_branch_list()
-        if not branch_name in branch_list:
-            raise BranchNotExist(f"Branch {branch_name} does not exist")
+        self.__branch_handler.branch_exist(branch_name)
         cur_branch = self.__head_handler.get_current_branch()
         if cur_branch == branch_name:
             raise CurrentBranchException(
@@ -64,6 +64,9 @@ class BranchCommand(AbstractCommand):
 
     def __create_branch(self, branch_name):
         last_commit_sha1 = self.__index_handler.get_last_commit_sha1()
+        branch_list = self.__branch_handler.get_branch_list()
+        if branch_name in branch_list:
+            raise CurrentBranchException(f"Branch {branch_name} already exist")
         if not last_commit_sha1:
             raise BranchHasNoCommits("The last commit was not found")
         else:

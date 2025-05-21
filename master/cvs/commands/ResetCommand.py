@@ -27,8 +27,8 @@ class ResetCommand(AbstractCommand):
         if full_sha1 is None:
             raise HashException("Commit does not exist")
         files = index_handler.get_files_from_commit(full_sha1)
-        index_handler.write_all(files)
         file_handler.restore_files_to_directory(files, self.__dir)
+        index_handler.write_all(files)
         index_handler.update_head(full_sha1)
         print(f"\033[93mSuccessfully rolled back to the commit"
               f" {full_sha1}\033[0m")

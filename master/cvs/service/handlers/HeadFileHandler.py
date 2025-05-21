@@ -9,7 +9,7 @@ class HeadFileHandler:
         self.__head_path = self.__path_handler.connect_path(cvs_dir, "HEAD")
 
     def change_branch(self, branch):
-        with open(self.__cvs_dir, "w") as head_file:
+        with open(self.__head_path, "w") as head_file:
             head_file.write(f"refs/heads/{branch}\n")
 
     def get_current_branch(self):

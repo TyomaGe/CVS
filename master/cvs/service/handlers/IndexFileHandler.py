@@ -1,4 +1,5 @@
 from master.cvs.service import Hashier
+from master.cvs.service.handlers import HeadFileHandler
 from master.cvs.service.handlers.PathHandler import PathHandler
 from master.models.exceptions import EmptyIndexException, \
     UnchangedIndexException, HashException
@@ -9,6 +10,7 @@ class IndexFileHandler:
         self.__cvs_dir = cvs_dir
         self.__path_handler = PathHandler()
         self.__index_path = self.__path_handler.make_path(cvs_dir, "index")
+        self.__head_handler = HeadFileHandler(self.__cvs_dir)
 
     def add(self, file_path, sha1):
         entries = self.read()
@@ -42,11 +44,12 @@ class IndexFileHandler:
             self.write_all(entries)
 
     def get_last_commit_sha1(self):
+        cur_branch = self.__head_handler.get_current_branch()
         head_path = self.__path_handler.connect_path(
             self.__cvs_dir,
             "refs",
             "heads",
-            "master"
+            cur_branch
         )
         if not self.__path_handler.exists(head_path):
             return None
@@ -143,7 +146,8 @@ class IndexFileHandler:
                 return line.split()[1]
         return None
 
-    def update_head(self, commit_sha1, branch_name="master"):
+    def update_head(self, commit_sha1):
+        branch_name = self.__head_handler.get_current_branch()
         ref_path = self.__path_handler.connect_path(
             self.__cvs_dir,
             "refs",
