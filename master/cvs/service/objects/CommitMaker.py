@@ -39,4 +39,5 @@ class CommitMaker:
         )
         with open(head_path, "w") as f:
             f.write(sha1)
+        print(f"\033[92mSuccessfully commited {sha1}\033[0m")
         return sha1

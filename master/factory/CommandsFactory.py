@@ -12,5 +12,6 @@ class CommandsFactory:
             StatusCommand,
             LogCommand,
             ResetCommand,
-            RmCommand
+            RmCommand,
+            BranchCommand
         )
