@@ -179,3 +179,12 @@ class IndexFileHandler:
 
     def get_index_paths(self):
         return list(self.read().keys())
+
+    def restore(self, file_paths):
+        entries = self.read()
+        for path in file_paths:
+            if path in entries:
+                del entries[path]
+                print(f"\033[93mRestored '{path}' "
+                      f"(removed from index only)\033[0m")
+        self.write_all(entries)
