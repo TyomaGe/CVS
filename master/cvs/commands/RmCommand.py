@@ -38,19 +38,15 @@ class RmCommand(AbstractCommand):
                                 rel_path,
                                 full_path
                             )
-                    self.__path_handler.remove_empty_dirs_up(
-                        abs_path,
-                        self.__dir
-                    )
+                    self.__path_handler.remove_empty_dirs_recursive(abs_path)
                 else:
                     self.__remove_if_tracked(
                         index_handler,
                         relative_path,
                         abs_path
                     )
-                    self.__path_handler.remove_empty_dirs_up(
-                        self.__path_handler.get_dirname(abs_path),
-                        self.__dir
+                    self.__path_handler.remove_empty_dirs_recursive(
+                        self.__path_handler.get_dirname(abs_path)
                     )
             else:
                 matched = False

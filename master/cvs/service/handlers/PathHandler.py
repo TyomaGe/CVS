@@ -59,11 +59,15 @@ class PathHandler:
             os.remove(path)
 
     @classmethod
-    def remove_empty_dirs_up(cls, start_path, stop_path):
-        current = start_path
-        while cls.get_dirname(current) != cls.get_dirname(stop_path):
-            try:
-                os.rmdir(current)
-            except OSError:
-                break
-            current = cls.get_dirname(current)
+    def remove_empty_dirs_recursive(cls, root_path):
+        for root, dirs, _ in os.walk(root_path, topdown=False):
+            for dir_name in dirs:
+                dir_path = os.path.join(root, dir_name)
+                try:
+                    os.rmdir(dir_path)
+                except OSError:
+                    pass
+        try:
+            os.rmdir(root_path)
+        except OSError:
+            pass
