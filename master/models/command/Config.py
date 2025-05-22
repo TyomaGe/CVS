@@ -57,3 +57,9 @@ class Branch:
 class Checkout:
     name = "checkout"
     description = "Allows you to switch between branches"
+
+
+@dataclass(frozen=True)
+class Diff:
+    name = "diff"
+    description = "Allows you to view the differences between two commits"

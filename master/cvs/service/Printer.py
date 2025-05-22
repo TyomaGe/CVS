@@ -42,3 +42,24 @@ class Printer:
                 print(f"\033[32m* {cur_branch}\033[0m")
             else:
                 print(f"  {branch}")
+
+    @classmethod
+    def print_diff_file(cls, diff_file):
+        for line in diff_file:
+            if line.startswith('+') and not line.startswith('+++'):
+                print(f"\033[32m{line}\033[0m")
+            elif line.startswith('-') and not line.startswith('---'):
+                print(f"\033[31m{line}\033[0m")
+            else:
+                print(line)
+        print()
+
+    @classmethod
+    def print_deleted_files(cls, first_paths, second_paths):
+        for path in sorted(first_paths - second_paths):
+            print(f"\033[31mFile deleted: {path}\033[0m")
+
+    @classmethod
+    def print_added_files(cls, first_paths, second_paths):
+        for path in sorted(second_paths - first_paths):
+            print(f"\033[32mFile added: {path}\033[0m")

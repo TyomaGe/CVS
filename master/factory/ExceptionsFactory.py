@@ -13,5 +13,7 @@ class ExceptionsFactory:
             HashException,
             BranchNotExist,
             CurrentBranchException,
-            MasterBranchException
+            MasterBranchException,
+            CommitNotExist,
+            SameCommitException
         )

@@ -13,5 +13,6 @@ class CommandsFactory:
             ResetCommand,
             RmCommand,
             BranchCommand,
-            CheckoutCommand
+            CheckoutCommand,
+            DiffCommand
         )
