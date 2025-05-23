@@ -1,18 +1,13 @@
 import argparse
 
+from master.models.text import *
+
 
 class ArgumentParser:
     def __init__(self):
         self.__parser = argparse.ArgumentParser(
-            description="CVS - a simple version control system\n"
-                        "Use this tool to manage your project files"
-                        " with commands like init, add, commit,"
-                        " status, log, reset, and etc",
-            epilog="Examples:\n"
-                   "init\n"
-                   "add file.txt\n"
-                   "commit -m \"Commit message\"\n"
-                   "status",
+            description=ARGUMENT_PARSER_DESCRIPTION,
+            epilog=ARGUMENT_PARSER_EPILOG,
             formatter_class=argparse.RawDescriptionHelpFormatter
         )
         self.__subparsers = self.__parser.add_subparsers(

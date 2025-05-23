@@ -68,4 +68,4 @@ class Diff:
 @dataclass(frozen=True)
 class Merge:
     name = "merge"
-    description = ""
+    description = "Merge changes from one branch into the current branch"
