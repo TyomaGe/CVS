@@ -11,16 +11,16 @@ class LogCommand(AbstractCommand):
         self.__dir, self.__cvs_dir = self._get_dirs_paths()
         self.__head_handler = HeadFileHandler(self.__cvs_dir)
         self.__path_handler = PathHandler()
+        self.__printer = Printer()
 
     def run(self, args):
         self._check_repository_initialized()
         current_branch = self.__head_handler.get_current_branch()
         head_commit = self.__head_handler.get_head_commit()
-        printer = Printer()
         commit_sha1 = head_commit
         while commit_sha1:
             commit_data = self.__read_commit(commit_sha1)
-            printer.print_commit(
+            self.__printer.print_commit(
                 commit_sha1,
                 commit_data,
                 current_branch,

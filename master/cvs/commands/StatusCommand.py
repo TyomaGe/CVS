@@ -11,27 +11,27 @@ class StatusCommand(AbstractCommand):
         self.__dir, self.__cvs_dir = self._get_dirs_paths()
         self.__head_handler = HeadFileHandler(self.__cvs_dir)
         self.__path_handler = PathHandler()
+        self.__index_handler = IndexFileHandler(self.__cvs_dir)
+        self.__printer = Printer()
 
     def run(self, args):
         self._check_repository_initialized()
         current_branch = self.__head_handler.get_current_branch()
-        index_handler = IndexFileHandler(self.__cvs_dir)
-        staged_changes = self.__get_staged_changes(index_handler)
-        unstaged_changes = self.__get_unstaged_changes(index_handler)
-        Printer().print_status(
+        staged_changes = self.__get_staged_changes()
+        unstaged_changes = self.__get_unstaged_changes()
+        self.__printer.print_status(
             current_branch,
             staged_changes,
             unstaged_changes
         )
 
-    @classmethod
-    def __get_staged_changes(cls, index_handler):
-        last_commit_sha = index_handler.get_last_commit_sha1()
+    def __get_staged_changes(self):
+        last_commit_sha = self.__index_handler.get_last_commit_sha1()
         if not last_commit_sha:
-            return {"new file": list(index_handler.read().keys())}
-        last_commit_files = index_handler.get_files_from_commit(
+            return {"new file": list(self.__index_handler.read().keys())}
+        last_commit_files = self.__index_handler.get_files_from_commit(
             last_commit_sha)
-        current_index = index_handler.read()
+        current_index = self.__index_handler.read()
         changes = {"modified": [], "new file": [], "deleted": []}
         for file, index_sha in current_index.items():
             if file not in last_commit_files:
@@ -43,8 +43,8 @@ class StatusCommand(AbstractCommand):
                 changes["deleted"].append(file)
         return {k: v for k, v in changes.items() if v}
 
-    def __get_unstaged_changes(self, index_handler):
-        index_entries = index_handler.read()
+    def __get_unstaged_changes(self):
+        index_entries = self.__index_handler.read()
         changes = {"modified": [], "deleted": []}
         for file, index_sha in index_entries.items():
             file_path = self.__path_handler.make_path(self.__dir, file)

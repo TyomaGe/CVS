@@ -28,3 +28,18 @@ MERGE_SUCCESS_TEXT = (
     "into '\033[1m{target_branch}\033[0m'\n"
     "Added {new_files_count} files, resolved {resolved_conflicts} conflicts"
 )
+
+ARGUMENT_PARSER_DESCRIPTION = (
+    "CVS - a simple version control system\n"
+    "Use this tool to manage your project files "
+    "with commands like init, add, commit, "
+    "status, log, reset, and etc"
+)
+
+ARGUMENT_PARSER_EPILOG = (
+    "Examples:\n"
+    "init\n"
+    "add file.txt\n"
+    "commit -m \"Commit message\"\n"
+    "status"
+)
