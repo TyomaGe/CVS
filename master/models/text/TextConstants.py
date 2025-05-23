@@ -14,10 +14,17 @@ MERGE_CONFLICT_TEXT = (
 
 MERGE_ABORT_TEXT = (
     "\nMerge aborted.\n"
-    "No changes have been made. You can resolve conflicts manually and\n"
-    "try merging again later."
+    "No changes have been made.\n"
+    "You can resolve conflicts manually and try merging again later."
 )
 
 MERGE_COMMIT_TEXT = (
-    "Merge branch '{merge_branch}' into {target_branch}"
+    "Merge branch '{merge_branch}' into '{target_branch}'"
+)
+
+MERGE_SUCCESS_TEXT = (
+    "\033[36mMerge completed successfully!\033[0m\n"
+    "Successfully merged branch '\033[1m{merge_branch}\033[0m' "
+    "into '\033[1m{target_branch}\033[0m'\n"
+    "Added {new_files_count} files, resolved {resolved_conflicts} conflicts"
 )

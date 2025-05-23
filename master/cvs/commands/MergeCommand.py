@@ -1,4 +1,5 @@
 from master.cvs.commands import AbstractCommand
+from master.cvs.service import Printer
 from master.cvs.service.handlers import *
 from master.cvs.service.objects import CommitMaker
 from master.models.command import Merge
@@ -16,6 +17,7 @@ class MergeCommand(AbstractCommand):
         self.__branch_handler = BranchHandler(self.__dir, self.__cvs_dir)
         self.__commit_maker = CommitMaker(self.__cvs_dir)
         self.__file_handler = FileHandler(self.__dir, self.__cvs_dir)
+        self.__printer = Printer()
 
     def get_args(self, parser):
         parser.add_argument(
@@ -64,6 +66,12 @@ class MergeCommand(AbstractCommand):
         self.__file_handler.restore_files_to_directory(
             files_to_load,
             self.__dir
+        )
+        self.__printer.print_merge_success(
+            merge_branch=merge_branch,
+            target_branch=target_branch,
+            new_files_count=len(new_files),
+            resolved_conflicts=len(resolved_files)
         )
 
     def __get_files_last_commit_each_branch(self, merge_branch, target_branch):
