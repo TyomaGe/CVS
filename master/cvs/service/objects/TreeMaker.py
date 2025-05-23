@@ -1,14 +1,15 @@
 import os
 from collections import defaultdict
 from master.cvs.service.Hashier import Hashier
+from master.cvs.service.handlers import IndexFileHandler
 from master.models.objects import Tree
 from master.cvs.service.ObjectWriter import ObjectWriter
 
 
 class TreeMaker:
-    def __init__(self, index_handler, cvs_dir):
-        self.__index_handler = index_handler
+    def __init__(self, cvs_dir):
         self.__cvs_dir = cvs_dir
+        self.__index_handler = IndexFileHandler(self.__cvs_dir)
         self.__writer = ObjectWriter(cvs_dir)
 
     def make_tree(self):

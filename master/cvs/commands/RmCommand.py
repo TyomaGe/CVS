@@ -8,8 +8,9 @@ class RmCommand(AbstractCommand):
     def __init__(self):
         self.name = Rm.name
         self.description = Rm.description
-        self.__path_handler = PathHandler()
         self.__dir, self.__cvs_dir = self._get_dirs_paths()
+        self.__path_handler = PathHandler()
+        self.__index_handler = IndexFileHandler(self.__cvs_dir)
         self.__file_handler = FileHandler(self.__dir, self.__cvs_dir)
 
     def get_args(self, parser):
@@ -24,13 +25,12 @@ class RmCommand(AbstractCommand):
 
     def run(self, args):
         self._check_repository_initialized()
-        index_handler = IndexFileHandler(self.__cvs_dir)
-        tracked_files = index_handler.get_index_paths()
+        tracked_files = self.__index_handler.get_index_paths()
         for relative_path in args.paths:
             if args.cached:
                 self.__file_handler.remove_from_index(
                     relative_path,
-                    index_handler,
+                    self.__index_handler,
                     tracked_files
                 )
             else:
@@ -40,16 +40,17 @@ class RmCommand(AbstractCommand):
                 )
                 if self.__path_handler.exists(abs_path):
                     if self.__path_handler.is_dir(abs_path):
-                        self.__file_handler.remove_dir(index_handler, abs_path)
+                        self.__file_handler.remove_dir(self.__index_handler,
+                                                       abs_path)
                     else:
                         self.__file_handler.remove_file(
-                            index_handler,
+                            self.__index_handler,
                             relative_path,
                             abs_path
                         )
                 else:
                     self.__file_handler.handle_nonexistent_path(
                         relative_path,
-                        index_handler,
+                        self.__index_handler,
                         tracked_files
                     )

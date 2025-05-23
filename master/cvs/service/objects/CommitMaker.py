@@ -1,5 +1,4 @@
-from master.cvs.service.handlers import IndexFileHandler, PathHandler, \
-    HeadFileHandler
+from master.cvs.service.handlers import PathHandler, HeadFileHandler
 from master.cvs.service.objects import TreeMaker
 from master.cvs.service.Hashier import Hashier
 from master.cvs.service.ObjectWriter import ObjectWriter
@@ -12,13 +11,12 @@ class CommitMaker:
         self.__cvs_dir = cvs_dir
         self.__path_handler = PathHandler()
         self.__writer = ObjectWriter(cvs_dir)
+        self.__tree_maker = TreeMaker(self.__cvs_dir)
+        self.__head_handler = HeadFileHandler(self.__cvs_dir)
 
     def make_commit(self, message, author="anonymous"):
-        index_handler = IndexFileHandler(self.__cvs_dir)
-        tree_maker = TreeMaker(index_handler, self.__cvs_dir)
-        head_handler = HeadFileHandler(self.__cvs_dir)
-        tree_sha1 = tree_maker.make_tree()
-        cur_branch = head_handler.get_current_branch()
+        tree_sha1 = self.__tree_maker.make_tree()
+        cur_branch = self.__head_handler.get_current_branch()
         head_path = self.__path_handler.connect_path(
             self.__cvs_dir,
             "refs",
