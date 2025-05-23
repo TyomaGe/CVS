@@ -14,5 +14,6 @@ class CommandsFactory:
             RmCommand,
             BranchCommand,
             CheckoutCommand,
-            DiffCommand
+            DiffCommand,
+            MergeCommand
         )

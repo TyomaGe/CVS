@@ -1,3 +1,6 @@
+from master.models.text import MERGE_SUCCESS_TEXT
+
+
 class Printer:
     @classmethod
     def __print_staged_changes(cls, staged_changes):
@@ -63,3 +66,19 @@ class Printer:
     def print_added_files(cls, first_paths, second_paths):
         for path in sorted(second_paths - first_paths):
             print(f"\033[32mFile added: {path}\033[0m")
+
+    @classmethod
+    def print_merge_success(
+            cls,
+            merge_branch,
+            target_branch,
+            new_files_count,
+            resolved_conflicts
+    ):
+        print(MERGE_SUCCESS_TEXT.format(
+                merge_branch=merge_branch,
+                target_branch=target_branch,
+                new_files_count=new_files_count,
+                resolved_conflicts=resolved_conflicts
+            )
+        )

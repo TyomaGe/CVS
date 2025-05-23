@@ -49,7 +49,7 @@ class BranchCommand(AbstractCommand):
                 f"To delete branch {branch_name} you have to"
                 f" checkout to another branch"
             )
-        if cur_branch == "master":
+        if branch_name == "master":
             raise MasterBranchException("Can`t delete master branch")
         branch_path = self.__path_handler.connect_path(
             self.__cvs_dir,

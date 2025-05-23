@@ -30,4 +30,4 @@ class HeadFileHandler:
         except FileNotFoundError as e:
             raise BranchHasNoCommits(f"There`s no commits yet in branch"
                                      f" '{branch_ref[len("refs/heads/"):]}'"
-            ) from e
+                                     ) from e

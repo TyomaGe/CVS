@@ -63,3 +63,9 @@ class Checkout:
 class Diff:
     name = "diff"
     description = "Allows you to view the differences between two commits"
+
+
+@dataclass(frozen=True)
+class Merge:
+    name = "merge"
+    description = ""
