@@ -29,12 +29,9 @@ class MergeCommand(AbstractCommand):
         self._check_repository_initialized()
         merge_branch = args.merge_branch
         target_branch = self.__head_handler.get_current_branch()
-        merge_branch_files, target_branch_files = (self
-            .__get_files_last_commit_each_branch(
-                merge_branch,
-                target_branch
-            )
-        )
+        merge_branch_files, target_branch_files = (
+            self.__get_files_last_commit_each_branch(merge_branch,
+                                                     target_branch))
         merge_branch_paths = set(merge_branch_files.keys())
         target_branch_paths = set(target_branch_files.keys())
         conflict_files = {}
@@ -80,11 +77,11 @@ class MergeCommand(AbstractCommand):
                 "Merge branch must be different from target branch"
             )
         merge_branch_sha1 = (self.__branch_handler
-            .get_head_commit_specified_branch(merge_branch)
-        )
+                             .get_head_commit_specified_branch(merge_branch)
+                             )
         target_branch_sha1 = (self.__branch_handler
-            .get_head_commit_specified_branch(target_branch)
-        )
+                              .get_head_commit_specified_branch(target_branch)
+                              )
         merge_branch_files = self.__index_handler.get_files_from_commit(
             merge_branch_sha1
         )

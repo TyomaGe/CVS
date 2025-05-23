@@ -109,8 +109,8 @@ class IndexFileHandler:
         else:
             last_commit_files = {}
         if not last_commit_sha1 and not current_entries:
-            raise EmptyIndexException("Nothing to commit:"
-                                    " index is empty and no previous commits")
+            raise EmptyIndexException(
+                "Nothing to commit: index is empty and no previous commits")
         if last_commit_sha1 and current_entries == last_commit_files:
             raise UnchangedIndexException("Nothing to commit:"
                                           " index matches the last commit")

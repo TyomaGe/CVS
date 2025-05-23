@@ -29,7 +29,7 @@ class BranchHandler:
 
     def branch_exist(self, branch_name):
         branch_list = self.get_branch_list()
-        if not branch_name in branch_list:
+        if branch_name not in branch_list:
             raise BranchNotExist(f"Branch {branch_name} does not exist")
 
     def get_head_commit_specified_branch(self, branch_name):
