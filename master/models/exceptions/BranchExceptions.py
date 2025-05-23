@@ -16,3 +16,13 @@ class CurrentBranchException(Exception):
 class MasterBranchException(Exception):
     def __init__(self, message="Something wrong with master branch"):
         super().__init__(message)
+
+
+class MergeException(Exception):
+    def __init__(self, message="Merge exception"):
+        super().__init__(message)
+
+
+class MergeConflictException(Exception):
+    def __init__(self, message="Merge conflict exception"):
+        super().__init__(message)

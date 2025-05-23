@@ -15,5 +15,7 @@ class ExceptionsFactory:
             CurrentBranchException,
             MasterBranchException,
             CommitNotExist,
-            SameCommitException
+            SameCommitException,
+            MergeException,
+            MergeConflictException
         )
