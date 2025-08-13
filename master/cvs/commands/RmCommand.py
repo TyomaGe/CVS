@@ -30,7 +30,6 @@ class RmCommand(AbstractCommand):
             if args.cached:
                 self.__file_handler.remove_from_index(
                     relative_path,
-                    self.__index_handler,
                     tracked_files
                 )
             else:
@@ -40,17 +39,14 @@ class RmCommand(AbstractCommand):
                 )
                 if self.__path_handler.exists(abs_path):
                     if self.__path_handler.is_dir(abs_path):
-                        self.__file_handler.remove_dir(self.__index_handler,
-                                                       abs_path)
+                        self.__file_handler.remove_dir(abs_path)
                     else:
                         self.__file_handler.remove_file(
-                            self.__index_handler,
                             relative_path,
                             abs_path
                         )
                 else:
                     self.__file_handler.handle_nonexistent_path(
                         relative_path,
-                        self.__index_handler,
                         tracked_files
                     )
